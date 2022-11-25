@@ -45,21 +45,27 @@ def runGame():
                     y_move -= 5
                 elif event.key == pygame.K_DOWN:
                     y_move += 5
+
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     x_move = 0
+                    if dis_move:
+                        dis_x_move = 0
                 elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     y_move = 0
 
         #캐릭 움직임 조절
         x += x_move
+        #배경이 움직일때만 계산
+        if dis_move:
+            dis_x += dis_x_move
+
         if x < 0:
             x = 0
+            dis_move = True
         elif x > dis_width - char_width:
             x = dis_width - char_width
             dis_move = True
-        elif x < dis_width - char_width:
-            dis_move = False
 
         y += y_move
         if y < 0:
@@ -68,17 +74,19 @@ def runGame():
             y = dis_height - char_height
 
         #배경 움직임 조절
-        dis_x += dis_x_move
         if dis_x > 0:
             dis_x = 0
+            dis_move = False
         elif dis_x < -585:
             dis_x = -585
-
+            dis_move = False
+            
+        """
         if dis_y > 0:
             dis_y = 0
         elif dis_y < -500:
             dis_y = -500
-
+        """
         #그리는 함수에 이동
         drawObject(map,dis_x, dis_y)
         drawObject(character,x,y)
