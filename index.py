@@ -42,8 +42,12 @@ def runGame():
                         dis_x_move -= 5
                     x_move += 5
                 elif event.key == pygame.K_UP:
+                    if dis_move:
+                        dis_y_move += 5
                     y_move -= 5
                 elif event.key == pygame.K_DOWN:
+                    if dis_move:
+                        dis_y_move -= 5
                     y_move += 5
 
             if event.type == pygame.KEYUP:
@@ -53,40 +57,44 @@ def runGame():
                         dis_x_move = 0
                 elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     y_move = 0
+                    if dis_move:
+                        dis_y_move = 0
 
-        #캐릭 움직임 조절
+        #캐릭 움직임 조절X
         x += x_move
-        #배경이 움직일때만 계산
-        if dis_move:
-            dis_x += dis_x_move
-
         if x < 0:
             x = 0
-            dis_move = True
         elif x > dis_width - char_width:
             x = dis_width - char_width
-            dis_move = True
-
+        #캐릭 움직임 조절Y
         y += y_move
         if y < 0:
             y = 0
         elif y > dis_height - char_height:
             y = dis_height - char_height
 
-        #배경 움직임 조절
+        #배경움직임 판단
+        if (x == 0 and dis_x == 0) or (x == 520 and dis_x == -585):
+            dis_move = False
+        elif (x == 520 and dis_x == 0) or (x == 0 and dis_x == -585):
+            dis_move = True
+
+        #배경이 움직일때만 계산
+        if dis_move:
+            dis_x += dis_x_move
+            dis_y += dis_y_move
+
+        #배경 움직임 조절 X
         if dis_x > 0:
             dis_x = 0
-            dis_move = False
-        elif dis_x < -585:
-            dis_x = -585
-            dis_move = False
-            
-        """
+        elif dis_x < -(dis_width - 15):
+            dis_x = -(dis_width - 15)
+        #배경 움직임 조절 Y   
         if dis_y > 0:
             dis_y = 0
-        elif dis_y < -500:
-            dis_y = -500
-        """
+        elif dis_y < -(dis_height - 3):
+            dis_y = -(dis_height - 3)
+
         #그리는 함수에 이동
         drawObject(map,dis_x, dis_y)
         drawObject(character,x,y)
